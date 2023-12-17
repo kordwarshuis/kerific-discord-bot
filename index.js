@@ -4,7 +4,7 @@ const fetchHowTos = require('./modules/fetchHowTos.js');
 
 // Synchronously read the content
 const quickLinks = fs.readFileSync('./quickLinks.txt', 'utf8');
-const howTos = fs.readFileSync('./howTos.txt', 'utf8');
+// const howTos = fs.readFileSync('./howTos.txt', 'utf8');
 
 const { Client, IntentsBitField } = require('discord.js');
 require('dotenv').config();
@@ -30,38 +30,6 @@ function findLinkTextAfterSee(str) {
 // // Example usage:
 // const exampleString = 'Random text See <a href="link.html">Link Text</a> more text';
 // console.log(findLinkTextAfterSee(exampleString)); // Outputs: "Link Text"
-
-function findSubstrings(str, substrings) {
-    // Create a regex pattern
-    const pattern = `(?:\\s)(${substrings.join('|')})(?:\\s)`;
-    const regex = new RegExp(pattern, 'g');
-
-    // Find matches
-    const matches = str.match(regex);
-
-    // Extracting only the substrings without spaces
-    return matches ? matches.map(match => match.trim()) : [];
-}
-
-// // Example usage
-// const substrings = ['apple', 'banana', 'orange'];
-// const text = "I have an apple and a banana and an orange in my basket.";
-
-// const foundSubstrings = findSubstrings(text, substrings);
-// console.log(foundSubstrings);  // Output: ['apple', 'banana', 'orange']
-
-
-function splitStringByNonConsecutiveSpace(str) {
-    return str.split(/\s+/);
-}
-
-// // Example with multiple spaces
-// const textWithExtraSpaces = "This  is a sample  string    with several words.";
-// const substrings = splitStringByNonConsecutiveSpace(textWithExtraSpaces);
-
-// console.log(substrings);
-// // Output will still be: ["This", "is", "a", "sample", "string", "with", "several", "words."]
-
 
 client.on('ready', (c) => {
     console.log(`👍 ${c.user.tag} is online!`);
