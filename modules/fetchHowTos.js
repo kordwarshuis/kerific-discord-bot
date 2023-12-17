@@ -15,8 +15,46 @@ function filterLinesBySubstring(str, substring) {
     return filteredLines;
 }
 
+
+function findSubstrings(str, substrings) {
+    // Create a regex pattern
+    const pattern = `(?:\\b)(${substrings.join('|')})(?:\\b)`;
+    const regex = new RegExp(pattern, 'g');
+
+    // Find matches
+    const matches = str.match(regex);
+
+    // Convert matches to a set to remove duplicates, then back to an array
+    return matches ? Array.from(new Set(matches)) : [];
+}
+
+// \\b is a word boundary in regex.It matches the position where a word character is not followed or preceded by another word character, such as spaces, punctuation, the start or end of a string, etc.
+// This pattern will match 'agent' and 'KEL' even if they are at the start or end of the string or followed by a punctuation mark.
+
+// // Example usage
+// const substrings = ['apple', 'banana', 'orange'];
+// const text = "I have an apple and a banana and an orange in my basket.";
+
+// const foundSubstrings = findSubstrings(text, substrings);
+// console.log(foundSubstrings);  // Output: ['apple', 'banana', 'orange']
+
+
+function splitStringByNonConsecutiveSpace(str) {
+    return str.split(/\s+/);
+}
+
+// // Example with multiple spaces
+// const textWithExtraSpaces = "This  is a sample  string    with several words.";
+// const substrings = splitStringByNonConsecutiveSpace(textWithExtraSpaces);
+
+// console.log(substrings);
+// // Output will still be: ["This", "is", "a", "sample", "string", "with", "several", "words."]
+
+
 async function fetchHowTos(input) {
     try {
+
+        const arrayInput = splitStringByNonConsecutiveSpace(input.toLocaleLowerCase());
         // Fetch the HTML from the URL
         const { data } = await axios.get(howToUrl);
 
@@ -33,8 +71,15 @@ async function fetchHowTos(input) {
 
             const stringText = htmlToText.htmlToText($(element).text());
 
-            if (stringText.includes(input)) {
-                endString += stringText + '\n';
+            // if (stringText.includes(input)) {
+            //     endString += stringText + '\n';
+            // };
+
+            // if (findSubstrings(stringText, arrayInput).length > 0) {
+            // console.log('arrayInput: ', arrayInput);
+            // console.log('findSubstrings(stringText.toLocaleLowerCase(), arrayInput): ', findSubstrings(stringText.toLocaleLowerCase(), arrayInput));
+            if (findSubstrings(stringText.toLocaleLowerCase(), arrayInput).length >= arrayInput.length) {
+                endString += '→ ' + stringText + '\n\n';
             };
 
         });
@@ -43,6 +88,7 @@ async function fetchHowTos(input) {
             endString = `No how-tos found for “${input}”.`;
         }
 
+        console.log(`+++++++++++++`);
         return endString;
     } catch (error) {
         console.error('Error fetching article:', error);
