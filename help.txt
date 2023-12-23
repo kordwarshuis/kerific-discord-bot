@@ -1,0 +1,13 @@
+This bot can lookup definitions in the Web of Trust glossary. Try typing “kerisse define” followed by a term. For example, “kerisse define DID” or “kerisse define verifiable credential”.
+
+kerisse help
+
+kerisse ?
+
+kerisse define <term>
+kerisse how to <keyword1> <keyword2> <keyword3 etc>
+
+kerisse show url
+
+kerisse whitepaper keri
+kerisse show quicklinks
