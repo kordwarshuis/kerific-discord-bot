@@ -4,7 +4,7 @@ const fetchHowTos = require('./modules/fetchHowTos.js');
 
 // Synchronously read the content
 const quickLinks = fs.readFileSync('./quickLinks.txt', 'utf8');
-// const howTos = fs.readFileSync('./howTos.txt', 'utf8');
+const help = fs.readFileSync('./help.txt', 'utf8');
 
 const { Client, IntentsBitField } = require('discord.js');
 require('dotenv').config();
@@ -22,9 +22,9 @@ const client = new Client({
 client.login(process.env.TOKEN); // Replace with your bot's token
 
 function findLinkTextAfterSee(str) {
-    // const pattern = /See.*?<a.*?>(.*?)<\/a>/s;
     const pattern = /See\s?:? ?<.*?<a.*?>(.*?)<\/a>/is;
     const match = pattern.exec(str);
+    console.log('match: ', match);
     return match ? match[1] : null;
 }
 // // Example usage:
@@ -66,8 +66,7 @@ client.on('messageCreate', (message) => {
                                         console.log('findLinkTextAfterSee(definition.definition: ', findLinkTextAfterSee(definition.definition));
                                         element.definitions.forEach(el => {
                                             if (el.organisation === definition.organisation) {
-                                                reply += "\n------------\n";
-                                                reply += el.organisation + " definition:\n";
+                                                reply += '# ' + el.organisation + " definition:\n";
                                                 reply += "\nRedirected\n";
 
                                                 const removedUrls = removeUrls(el.definition);
@@ -77,8 +76,7 @@ client.on('messageCreate', (message) => {
                                     };
                                 });
                             } else {
-                                reply += "\n------------\n";
-                                reply += definition.organisation + " definition:\n";
+                                reply += '# ' + definition.organisation + " definition:\n";
                                 const removedUrls = removeUrls(definition.definition);
 
                                 reply += htmlToText.htmlToText(removedUrls) + "\n";
@@ -101,8 +99,9 @@ client.on('messageCreate', (message) => {
             })
     }
 
-    if (message.content.toLocaleLowerCase().startsWith('kerisse help')) {
-        message.reply('This bot can lookup definitions in the Web of Trust glossary. Try typing “kerisse define” followed by a term. For example, “kerisse define DID” or “kerisse define verifiable credential”.');
+    if (message.content.toLocaleLowerCase().startsWith('kerisse help') ||
+        message.content.toLocaleLowerCase().startsWith('kerisse ?')) {
+        message.reply(help);
 
     }
 
@@ -112,10 +111,6 @@ client.on('messageCreate', (message) => {
 
     if (message.content.toLocaleLowerCase().startsWith('kerisse show quicklinks')) {
         message.reply(quickLinks);
-    }
-
-    if (message.content.toLocaleLowerCase().startsWith('kerisse show howtos')) {
-        message.reply(howTos);
     }
 
     if (message.content.toLocaleLowerCase().startsWith('kerisse show url')) {
@@ -133,6 +128,7 @@ client.on('messageCreate', (message) => {
     }
 
     if (message.content.toLocaleLowerCase().startsWith('kerisse how to')) {
+        message.reply('Ok, searching…');
         const input = message.content.slice(15); // Adjust depending on your command length
 
 
