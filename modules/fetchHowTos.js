@@ -86,10 +86,11 @@ async function fetchHowTos(input) {
 
         if (endString === '') {
             endString = `No how-tos found for “${input}”.`;
+            return endString;
+        } else {
+            endString = 'This is what I found:\n\n' + endString;
+            return endString;
         }
-
-        console.log(`+++++++++++++`);
-        return endString;
     } catch (error) {
         console.error('Error fetching article:', error);
         return null;
